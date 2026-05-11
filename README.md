@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -14,3 +15,7 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+=======
+# Intelligent-Talent-Matching-Platform-
+This repository contains the source code and documentation for the Intelligent Talent Matching Platform, developed by a team of five students as part of the CSIT314 – Systems Development Methodologies subject at the University of Wollongong.
+>>>>>>> 104f270d26c7f9a3ac031681d84924e8ba2ad210
