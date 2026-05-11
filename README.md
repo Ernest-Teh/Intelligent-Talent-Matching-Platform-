@@ -1,21 +1,44 @@
-<<<<<<< HEAD
-# React + Vite
+# TalentMatch — Frontend (`talentmatch-ui`)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React single-page app for the **Intelligent Talent Matching Platform** (CSIT314 coursework). It implements candidate and employer flows with client-side navigation and **localStorage** persistence until a backend is connected.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React** 19 + **Vite** 8  
+- **React Router** 7 (`BrowserRouter`)  
+- **ESLint** (see `eslint.config.js`)
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Node.js** 20+ recommended  
+- **npm** (comes with Node)
 
-## Expanding the ESLint configuration
+## Setup & scripts
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# Intelligent-Talent-Matching-Platform-
-This repository contains the source code and documentation for the Intelligent Talent Matching Platform, developed by a team of five students as part of the CSIT314 – Systems Development Methodologies subject at the University of Wollongong.
->>>>>>> 104f270d26c7f9a3ac031681d84924e8ba2ad210
+```bash
+npm install
+npm run dev      # start dev server (default: http://localhost:5173)
+npm run build    # production build → dist/
+npm run preview  # serve the production build locally
+npm run lint     # run ESLint
+
+
+**Project layout (abbreviated)**
+talentmatch-ui/
+├── data/                 # JSON fixtures / dev mirror output
+├── public/
+├── src/
+│   ├── App.jsx           # route table
+│   ├── main.jsx
+│   ├── pages/            # page components + CSS
+│   ├── data/             # in-app data modules
+│   ├── hooks/
+│   └── lib/              # storage helpers
+├── index.html
+├── vite.config.js
+└── package.json
+
+**Repository note**
+This folder is the frontend package. The GitHub remote may be a monorepo root; if so, link or document where this app lives inside that repo for other teammates.
+
+Developed by Alyan Alam as part of CSIT314 — Systems Development Methodologies, University of Wollongong.
