@@ -1,0 +1,168 @@
+.employer-signup-page {
+  min-height: 100vh;
+  background: var(--employer-signup-bg);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.employer-signup-wrap {
+  width: min(1152px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.employer-signup-header {
+  background: var(--employer-signup-surface);
+  border-bottom: 1px solid var(--employer-signup-border);
+  padding: 24px 0 1px;
+}
+
+.employer-signup-brand {
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.employer-signup-brand-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  background: var(--employer-signup-primary);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 700 18px/1 Manrope, sans-serif;
+}
+
+.employer-signup-brand-text {
+  color: var(--employer-signup-heading);
+  font: 700 20px/28px Manrope, sans-serif;
+}
+
+.employer-signup-main {
+  padding: 48px 0;
+}
+
+.employer-signup-card {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  background: var(--employer-signup-surface);
+  border: 1px solid var(--employer-signup-border);
+  border-radius: 16px;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.employer-signup-card h1 {
+  margin: 0;
+  color: var(--employer-signup-heading);
+  font: 700 30px/36px Manrope, sans-serif;
+}
+
+.employer-signup-card > p {
+  margin: 8px 0 24px;
+  color: var(--employer-signup-body);
+  font: 400 16px/24px 'DM Sans', sans-serif;
+}
+
+.employer-signup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.employer-signup-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.employer-signup-field span {
+  color: var(--employer-signup-heading);
+  font: 500 16px/24px 'DM Sans', sans-serif;
+}
+
+.employer-signup-field input,
+.employer-signup-field select,
+.employer-signup-field textarea {
+  border: 1px solid var(--employer-signup-border);
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-sizing: border-box;
+  color: var(--employer-signup-heading);
+  font: 400 16px/24px 'DM Sans', sans-serif;
+}
+
+.employer-signup-field input,
+.employer-signup-field select {
+  height: 46px;
+}
+
+.employer-signup-field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.employer-signup-radio-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  min-height: 46px;
+  align-items: center;
+}
+
+.employer-signup-radio-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--employer-signup-heading);
+  font: 400 16px/24px 'DM Sans', sans-serif;
+}
+
+.employer-signup-radio-option input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--employer-signup-primary);
+}
+
+.employer-signup-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.employer-signup-actions button {
+  height: 48px;
+  border-radius: 12px;
+  padding: 0 24px;
+  font: 400 16px/24px 'DM Sans', sans-serif;
+  cursor: pointer;
+}
+
+.employer-signup-actions .primary {
+  border: 0;
+  background: var(--employer-signup-primary);
+  color: #fff;
+}
+
+.employer-signup-actions .ghost {
+  border: 1px solid var(--employer-signup-border);
+  background: #fff;
+  color: var(--employer-signup-heading);
+}
+
+.employer-signup-feedback {
+  margin: 12px 0 0;
+  color: var(--employer-signup-primary);
+  font: 400 14px/20px 'DM Sans', sans-serif;
+}
+
+@media (max-width: 720px) {
+  .employer-signup-grid {
+    grid-template-columns: 1fr;
+  }
+}

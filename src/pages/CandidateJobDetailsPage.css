@@ -1,0 +1,177 @@
+.jd-page {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background: var(--jd-bg);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.jd-sidebar {
+  background: var(--jd-surface);
+  border-right: 1px solid var(--jd-border);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.jd-brand {
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font: 700 17px/1 Manrope, sans-serif;
+  color: var(--jd-heading);
+  padding: 8px 8px 16px;
+}
+
+.jd-brand-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--jd-primary);
+  color: #fff;
+  display: grid;
+  place-items: center;
+}
+
+.jd-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.jd-nav-item {
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font: 500 15px/1 'DM Sans', sans-serif;
+  color: var(--jd-body);
+}
+
+.jd-nav-item:hover {
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.jd-nav-item.active {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--jd-primary);
+  font-weight: 600;
+}
+
+.jd-logout {
+  margin-top: auto;
+}
+
+.jd-main {
+  padding: 24px 32px 48px;
+  max-width: 800px;
+}
+
+.jd-back {
+  border: 0;
+  background: transparent;
+  color: var(--jd-primary);
+  font: 600 14px/1 'DM Sans', sans-serif;
+  cursor: pointer;
+  padding: 0 0 16px;
+}
+
+.jd-card {
+  background: var(--jd-surface);
+  border: 1px solid var(--jd-border);
+  border-radius: 16px;
+  padding: 24px 28px;
+}
+
+.jd-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.jd-card-head h1 {
+  margin: 0 0 8px;
+  font: 700 26px/1.2 Manrope, sans-serif;
+  color: var(--jd-heading);
+}
+
+.jd-meta {
+  margin: 0 0 6px;
+  color: var(--jd-body);
+  font: 400 15px/1.5 'DM Sans', sans-serif;
+}
+
+.jd-salary {
+  margin: 0;
+  color: var(--jd-heading);
+  font: 600 15px/1 'DM Sans', sans-serif;
+}
+
+.jd-apply {
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 10px;
+  border: 0;
+  background: var(--jd-primary);
+  color: #fff;
+  font: 600 15px/1 'DM Sans', sans-serif;
+  cursor: pointer;
+}
+
+.jd-section {
+  margin-top: 18px;
+}
+
+.jd-section h2 {
+  margin: 0 0 8px;
+  font: 700 18px/1.3 Manrope, sans-serif;
+  color: var(--jd-heading);
+}
+
+.jd-section p {
+  margin: 0;
+  color: var(--jd-body);
+  font: 400 15px/1.6 'DM Sans', sans-serif;
+}
+
+.jd-section ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--jd-body);
+  font: 400 15px/1.6 'DM Sans', sans-serif;
+}
+
+.jd-section li {
+  margin-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+  .jd-page {
+    grid-template-columns: 1fr;
+  }
+
+  .jd-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: 0;
+    border-bottom: 1px solid var(--jd-border);
+  }
+
+  .jd-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .jd-logout {
+    margin-top: 0;
+  }
+}
