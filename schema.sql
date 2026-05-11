@@ -14,12 +14,12 @@
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS jobs (
     id           BIGSERIAL PRIMARY KEY,
-    title        TEXT        NOT NULL,
+    title        TEXT       NOT NULL,
     description  TEXT,
     company      TEXT,
     location     TEXT,
     salary       NUMERIC,
-    created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at   TIMESTAMP  NOT NULL DEFAULT NOW()
 );
 
 
@@ -29,10 +29,10 @@ CREATE TABLE IF NOT EXISTS jobs (
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS users (
     id          BIGSERIAL PRIMARY KEY,
-    full_name   TEXT        NOT NULL,
-    email       TEXT        NOT NULL UNIQUE,
-    role        TEXT        NOT NULL CHECK (role IN ('seeker', 'employer')),
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    full_name   TEXT       NOT NULL,
+    email       TEXT       NOT NULL UNIQUE,
+    role        TEXT       NOT NULL CHECK (role IN ('seeker', 'employer')),
+    created_at  TIMESTAMP  NOT NULL DEFAULT NOW()
 );
 
 
@@ -42,10 +42,10 @@ CREATE TABLE IF NOT EXISTS users (
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS companies (
     id          BIGSERIAL PRIMARY KEY,
-    name        TEXT        NOT NULL,
+    name        TEXT       NOT NULL,
     industry    TEXT,
     website     TEXT,
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at  TIMESTAMP  NOT NULL DEFAULT NOW()
 );
 
 
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS applications (
     job_id      BIGINT      NOT NULL REFERENCES jobs(id)  ON DELETE CASCADE,
     status      TEXT        NOT NULL DEFAULT 'pending'
                             CHECK (status IN ('pending', 'accepted', 'rejected')),
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at  TIMESTAMP   NOT NULL DEFAULT NOW()
 );
 
 -- Helpful indexes for the foreign keys (speeds up lookups/joins)
