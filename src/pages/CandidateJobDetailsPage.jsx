@@ -1,5 +1,9 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { getAllJobs } from '../data/allJobs'
+import { SAMPLE_JOBS } from '../data/jobs'
+import { useJobsRevision } from '../hooks/useJobsRevision'
+import { addJobApplication } from '../lib/talentmatchStorage'
 import './CandidateJobDetailsPage.css'
 
 const DETAILS_CONFIG = {
@@ -22,6 +26,20 @@ const DETAILS_CONFIG = {
     applications: 'Back to My Applications',
     default: 'Back',
   },
+  applyModal: {
+    title: 'Apply for this role',
+    subtitle: 'Add a short note for the hiring team.',
+    jobLine: 'Applying to',
+    coverLabel: 'Cover letter or message',
+    coverPlaceholder: 'Tell the employer why you are a great fit…',
+    linkedinLabel: 'LinkedIn profile (optional)',
+    linkedinPlaceholder: 'https://linkedin.com/in/…',
+    cancel: 'Cancel',
+    submit: 'Submit application',
+    successTitle: 'Application sent',
+    successBody: 'Done — check My Applications for this entry.',
+    close: 'Close',
+  },
 }
 
 const SENIOR_FE_DETAILS = {
@@ -39,7 +57,34 @@ const SENIOR_FE_DETAILS = {
   ],
 }
 
+// Rich copy for one featured role; everyone else gets the generic template below.
 function buildDetails(job) {
+  if (job?.employerPosted && job.description) {
+    const parts = String(job.description)
+      .split(/\n+/)
+      .map((p) => p.trim())
+      .filter(Boolean)
+    const overview = parts[0] ?? job.description
+    const responsibilities = parts.length > 1 ? parts.slice(1) : [job.description]
+    const requirements = []
+    if (job.educationRequirement) requirements.push(`Education: ${job.educationRequirement}`)
+    if (job.experienceYears) requirements.push(`Experience: ${job.experienceYears}`)
+    if (job.workMode) requirements.push(`Work mode: ${job.workMode}`)
+    if (job.tags?.length) requirements.push(`Skills: ${job.tags.join(', ')}`)
+    return {
+      title: job.title,
+      company: job.company,
+      location: job.location,
+      type: job.type,
+      salary: job.salary ?? '',
+      overview,
+      responsibilities,
+      requirements: requirements.length
+        ? requirements
+        : ['See job description for full requirements.'],
+    }
+  }
+
   const title = job?.title ?? 'Role'
   if (title === 'Senior Frontend Developer') {
     return {
@@ -73,6 +118,7 @@ function buildDetails(job) {
   }
 }
 
+// Figure out which screen opened job details (drives back link + active nav).
 function resolveSource(location, searchParams) {
   const fromState = location.state?.source
   const fromQuery = searchParams.get('source')
@@ -86,14 +132,24 @@ function CandidateJobDetailsPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
+  const jobsRev = useJobsRevision()
 
-  const job = location.state?.job
+  const jobFromNav = location.state?.job
+  const fallbackJob = useMemo(() => getAllJobs()[0] ?? SAMPLE_JOBS[0], [jobsRev])
+  const job = jobFromNav ?? fallbackJob
+
   const openedFrom = useMemo(
     () => resolveSource(location, searchParams),
     [location.state, searchParams],
   )
 
   const detail = useMemo(() => buildDetails(job), [job])
+
+  const [applyOpen, setApplyOpen] = useState(false)
+  const [applyStep, setApplyStep] = useState('form')
+  const [coverLetter, setCoverLetter] = useState('')
+  const [linkedinUrl, setLinkedinUrl] = useState('')
+  const [applyError, setApplyError] = useState('')
 
   const themeVars = useMemo(
     () => ({
@@ -122,6 +178,54 @@ function CandidateJobDetailsPage() {
     if (openedFrom === 'applications' && item.id === 'applications') return 'active'
     return ''
   }
+
+  const openApplyModal = () => {
+    setApplyStep('form')
+    setCoverLetter('')
+    setLinkedinUrl('')
+    setApplyError('')
+    setApplyOpen(true)
+  }
+
+  const closeApplyModal = () => {
+    setApplyOpen(false)
+    setApplyStep('form')
+    setApplyError('')
+  }
+
+  useEffect(() => {
+    if (!applyOpen) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') closeApplyModal()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [applyOpen])
+
+  const submitApplication = async () => {
+    const trimmed = coverLetter.trim()
+    if (trimmed.length < 8) {
+      setApplyError('Please add a short message (at least a few words).')
+      return
+    }
+    setApplyError('')
+    try {
+      await addJobApplication({
+        jobId: job?.id ?? 'unknown',
+        jobTitle: detail.title,
+        company: detail.company,
+        location: detail.location,
+        jobType: detail.type,
+        coverLetter: trimmed,
+        linkedinUrl: linkedinUrl.trim() || null,
+      })
+      setApplyStep('success')
+    } catch (e) {
+      setApplyError(e instanceof Error ? e.message : 'Could not save application.')
+    }
+  }
+
+  const m = DETAILS_CONFIG.applyModal
 
   return (
     <div className="jd-page" style={themeVars}>
@@ -161,7 +265,7 @@ function CandidateJobDetailsPage() {
               </p>
               {detail.salary ? <p className="jd-salary">{detail.salary}</p> : null}
             </div>
-            <button type="button" className="jd-apply">
+            <button type="button" className="jd-apply" onClick={openApplyModal}>
               {DETAILS_CONFIG.applyLabel}
             </button>
           </header>
@@ -190,6 +294,73 @@ function CandidateJobDetailsPage() {
           </section>
         </article>
       </main>
+
+      {applyOpen ? (
+        <div
+          className="jd-modal-root"
+          role="presentation"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) closeApplyModal()
+          }}
+        >
+          <div className="jd-modal" role="dialog" aria-modal="true" aria-labelledby="apply-modal-title">
+            {applyStep === 'form' ? (
+              <>
+                <h2 id="apply-modal-title">{m.title}</h2>
+                <p className="jd-modal-sub">{m.subtitle}</p>
+                <p className="jd-modal-job">
+                  {m.jobLine}: <strong>{detail.title}</strong> — {detail.company}
+                </p>
+
+                <label className="jd-modal-field">
+                  <span>{m.coverLabel}</span>
+                  <textarea
+                    value={coverLetter}
+                    onChange={(e) => setCoverLetter(e.target.value)}
+                    placeholder={m.coverPlaceholder}
+                    rows={5}
+                  />
+                </label>
+
+                <label className="jd-modal-field">
+                  <span>{m.linkedinLabel}</span>
+                  <input
+                    type="url"
+                    value={linkedinUrl}
+                    onChange={(e) => setLinkedinUrl(e.target.value)}
+                    placeholder={m.linkedinPlaceholder}
+                  />
+                </label>
+
+                {applyError ? (
+                  <p className="jd-modal-error" role="alert">
+                    {applyError}
+                  </p>
+                ) : null}
+
+                <div className="jd-modal-actions">
+                  <button type="button" className="jd-modal-cancel" onClick={closeApplyModal}>
+                    {m.cancel}
+                  </button>
+                  <button type="button" className="jd-modal-submit" onClick={submitApplication}>
+                    {m.submit}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 id="apply-modal-title">{m.successTitle}</h2>
+                <p className="jd-modal-sub">{m.successBody}</p>
+                <div className="jd-modal-actions jd-modal-actions-single">
+                  <button type="button" className="jd-modal-submit" onClick={closeApplyModal}>
+                    {m.close}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

@@ -1,3 +1,8 @@
+/*
+ * CandidateDashboardPage.css → CandidateDashboardPage.jsx
+ * Prefix: dash-
+ */
+
 .dash-page {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -6,6 +11,7 @@
   font-family: 'DM Sans', sans-serif;
 }
 
+/* --- Sidebar --- */
 .dash-sidebar {
   background: var(--dash-surface);
   border-right: 1px solid var(--dash-border);
@@ -71,11 +77,13 @@
   margin-top: auto;
 }
 
+/* --- Main column --- */
 .dash-main {
   padding: 28px 32px 48px;
   max-width: 960px;
 }
 
+/* --- Welcome + membership --- */
 .dash-header {
   display: flex;
   justify-content: space-between;
@@ -138,6 +146,7 @@
   cursor: default;
 }
 
+/* --- Search --- */
 .dash-search-row {
   display: flex;
   gap: 10px;
@@ -167,6 +176,7 @@
   white-space: nowrap;
 }
 
+/* --- Job cards --- */
 .dash-section h2 {
   margin: 0 0 16px;
   font: 700 18px/1.3 Manrope, sans-serif;
@@ -244,12 +254,14 @@
   color: var(--dash-heading);
 }
 
+/* --- Inline feedback --- */
 .dash-feedback {
   margin-top: 16px;
   color: var(--dash-primary);
   font: 400 14px/1.4 'DM Sans', sans-serif;
 }
 
+/* --- Breakpoints --- */
 @media (max-width: 900px) {
   .dash-page {
     grid-template-columns: 1fr;

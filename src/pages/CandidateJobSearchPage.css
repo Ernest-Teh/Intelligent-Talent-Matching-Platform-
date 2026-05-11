@@ -1,3 +1,8 @@
+/*
+ * CandidateJobSearchPage.css → CandidateJobSearchPage.jsx
+ * Prefix: job-search-page (root), js- (everything else)
+ */
+
 .job-search-page {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -6,6 +11,7 @@
   font-family: 'DM Sans', sans-serif;
 }
 
+/* --- Sidebar --- */
 .js-sidebar {
   background: var(--js-surface);
   border-right: 1px solid var(--js-border);
@@ -68,6 +74,7 @@
   margin-top: auto;
 }
 
+/* --- Main: header, filters, results --- */
 .js-main {
   padding: 28px 32px 48px;
   max-width: 960px;
@@ -85,6 +92,7 @@
   font: 400 15px/1.5 'DM Sans', sans-serif;
 }
 
+/* --- Filter row + search --- */
 .js-filters {
   display: grid;
   grid-template-columns: repeat(2, minmax(160px, 1fr)) minmax(240px, 2fr);
@@ -136,6 +144,7 @@
   cursor: pointer;
 }
 
+/* --- Job cards --- */
 .js-results {
   display: flex;
   flex-direction: column;
@@ -217,6 +226,7 @@
   font: 400 14px/1 'DM Sans', sans-serif;
 }
 
+/* --- Breakpoints --- */
 @media (max-width: 900px) {
   .job-search-page {
     grid-template-columns: 1fr;

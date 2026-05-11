@@ -1,8 +1,14 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { API_BASE } from '../api'
+import {
+  loadJson,
+  saveCandidateDraft,
+  saveCandidateProfileComplete,
+  STORAGE_KEYS,
+} from '../lib/talentmatchStorage'
 import './CandidateProfilePage.css'
 
+// Copy + field defs in one place — tweak here instead of hunting through JSX.
 const CANDIDATE_CONFIG = {
   brand: { name: 'TalentMatch', glyph: 'T' },
   title: 'Create Your Profile',
@@ -62,21 +68,26 @@ const initialForm = {
   years: '',
 }
 
-async function saveToBackend(kind, body) {
-  const res = await fetch(`${API_BASE}/api/candidate-profile/${kind}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error(err.message || 'Save failed')
+// Draft beats completed profile so unfinished work shows up first after refresh.
+function readStoredCandidateForm() {
+  const draft = loadJson(STORAGE_KEYS.candidateDraft)
+  const complete = loadJson(STORAGE_KEYS.candidateProfile)
+  const source = draft ?? complete
+  if (!source || typeof source !== 'object') return null
+
+  const next = { ...initialForm }
+  for (const key of Object.keys(initialForm)) {
+    if (source[key] != null && source[key] !== '') {
+      next[key] = String(source[key])
+    }
   }
+  return { form: next, resumeHint: source.resumeFileName ?? null }
 }
 
 function CandidateProfilePage() {
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
+
   const [form, setForm] = useState(initialForm)
   const [resumeFile, setResumeFile] = useState(null)
   const [dragActive, setDragActive] = useState(false)
@@ -94,38 +105,47 @@ function CandidateProfilePage() {
     [],
   )
 
+  useEffect(() => {
+    const stored = readStoredCandidateForm()
+    if (stored) {
+      setForm(stored.form)
+      if (stored.resumeHint) setResumeFile(stored.resumeHint)
+    }
+  }, [])
+
   const onChange = (e) => {
     const { name, value } = e.target
     setForm((p) => ({ ...p, [name]: value }))
   }
 
+  // We only keep the filename in JSON, not the file bytes.
   const onFile = (fileList) => {
     const file = fileList?.[0]
     if (file) setResumeFile(file.name)
   }
 
-  const buildPayload = (status) => ({
+  const buildPayload = () => ({
     ...form,
-    status,
     resumeFileName: resumeFile || null,
   })
 
   const saveDraft = async () => {
     try {
-      await saveToBackend('draft', buildPayload('draft'))
-      setFeedback('Draft saved on server')
+      await saveCandidateDraft(buildPayload())
+      setFeedback('Draft saved (see /data/candidate-profile-draft.json when using npm run dev)')
     } catch (e) {
-      setFeedback(e.message)
+      setFeedback(e instanceof Error ? e.message : 'Save failed')
     }
   }
 
   const saveAndContinue = async () => {
     try {
-      await saveToBackend('profile', buildPayload('complete'))
+      await saveCandidateProfileComplete(buildPayload())
       localStorage.setItem('talentmatch-session', 'signup')
+      setFeedback('Profile saved. Redirecting…')
       navigate('/candidate/dashboard')
     } catch (e) {
-      setFeedback(e.message)
+      setFeedback(e instanceof Error ? e.message : 'Save failed')
     }
   }
 

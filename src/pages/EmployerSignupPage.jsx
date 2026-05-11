@@ -1,8 +1,14 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { API_BASE } from '../api'
+import {
+  loadJson,
+  saveEmployerDraft,
+  saveEmployerProfileComplete,
+  STORAGE_KEYS,
+} from '../lib/talentmatchStorage'
 import './EmployerSignupPage.css'
 
+// Strings and fields for employer signup — edit here, not scattered in the markup.
 const EMPLOYER_SIGNUP_CONFIG = {
   brand: { name: 'TalentMatch', glyph: 'T' },
   title: 'Create Employer Profile',
@@ -44,16 +50,19 @@ const initialForm = {
   companyDescription: '',
 }
 
-async function saveEmployer(kind, body) {
-  const res = await fetch(`${API_BASE}/api/employer-profile/${kind}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error(err.message || 'Save failed')
+function readStoredEmployerForm() {
+  const draft = loadJson(STORAGE_KEYS.employerDraft)
+  const complete = loadJson(STORAGE_KEYS.employerProfile)
+  const source = draft ?? complete
+  if (!source || typeof source !== 'object') return null
+
+  const next = { ...initialForm }
+  for (const key of Object.keys(initialForm)) {
+    if (source[key] != null && source[key] !== '') {
+      next[key] = String(source[key])
+    }
   }
+  return next
 }
 
 function EmployerSignupPage() {
@@ -73,6 +82,11 @@ function EmployerSignupPage() {
     [],
   )
 
+  useEffect(() => {
+    const stored = readStoredEmployerForm()
+    if (stored) setFormData(stored)
+  }, [])
+
   const onFieldChange = (event) => {
     const { name, value } = event.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -80,21 +94,21 @@ function EmployerSignupPage() {
 
   const onContinue = async () => {
     try {
-      await saveEmployer('profile', { ...formData, status: 'complete' })
+      await saveEmployerProfileComplete(formData)
       localStorage.setItem('talentmatch-employer-session', 'signup')
-      setFeedback('Employer profile saved')
+      setFeedback('Employer profile saved. Redirecting…')
       navigate('/employer/dashboard')
     } catch (e) {
-      setFeedback(e.message)
+      setFeedback(e instanceof Error ? e.message : 'Save failed')
     }
   }
 
   const onDraft = async () => {
     try {
-      await saveEmployer('draft', { ...formData, status: 'draft' })
-      setFeedback('Draft saved on server')
+      await saveEmployerDraft(formData)
+      setFeedback('Draft saved (see /data/employer-profile-draft.json when using npm run dev)')
     } catch (e) {
-      setFeedback(e.message)
+      setFeedback(e instanceof Error ? e.message : 'Save failed')
     }
   }
 

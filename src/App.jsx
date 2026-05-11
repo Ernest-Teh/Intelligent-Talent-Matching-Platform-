@@ -5,7 +5,9 @@ import CandidateJobSearchPage from './pages/CandidateJobSearchPage'
 import CandidateMyApplicationsPage from './pages/CandidateMyApplicationsPage'
 import CandidateProfilePage from './pages/CandidateProfilePage'
 import CandidateSignupPage from './pages/SignupPage'
+import EmployerCreateJobPage from './pages/EmployerCreateJobPage'
 import EmployerDashboardPage from './pages/EmployerDashboardPage'
+import EmployerFindCandidatesPage from './pages/EmployerFindCandidatesPage'
 import EmployerSignupPage from './pages/EmployerSignupPage'
 import LandingPage from './pages/LandingPage'
 
@@ -21,6 +23,8 @@ function App() {
       <Route path="/candidate/job-details" element={<CandidateJobDetailsPage />} />
       <Route path="/employer-signup" element={<EmployerSignupPage />} />
       <Route path="/employer/dashboard" element={<EmployerDashboardPage />} />
+      <Route path="/employer/create-job" element={<EmployerCreateJobPage />} />
+      <Route path="/employer/find-candidates" element={<EmployerFindCandidatesPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { SAMPLE_JOBS } from '../data/jobs'
+import { getAllJobs } from '../data/allJobs'
+import { useJobsRevision } from '../hooks/useJobsRevision'
 import './CandidateDashboardPage.css'
 
 const DASHBOARD_CONFIG = {
@@ -30,10 +31,13 @@ function greetingLabel() {
 
 function CandidateDashboardPage() {
   const navigate = useNavigate()
+  const jobsRev = useJobsRevision()
   const [query, setQuery] = useState('')
   const [activeNav, setActiveNav] = useState('dashboard')
   const [isMember, setIsMember] = useState(false)
   const [feedback, setFeedback] = useState('')
+
+  const allJobs = useMemo(() => getAllJobs(), [jobsRev])
 
   const themeVars = useMemo(
     () => ({
@@ -49,14 +53,14 @@ function CandidateDashboardPage() {
 
   const filteredJobs = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return SAMPLE_JOBS
-    return SAMPLE_JOBS.filter(
+    if (!q) return allJobs
+    return allJobs.filter(
       (j) =>
         j.title.toLowerCase().includes(q) ||
         j.company.toLowerCase().includes(q) ||
         j.tags.some((t) => t.toLowerCase().includes(q)),
     )
-  }, [query])
+  }, [allJobs, query])
 
   const goNav = (item) => {
     if (item.id === 'logout') {

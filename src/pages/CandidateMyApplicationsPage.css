@@ -1,3 +1,8 @@
+/*
+ * CandidateMyApplicationsPage.css → CandidateMyApplicationsPage.jsx
+ * Prefix: ma-
+ */
+
 .ma-page {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -6,6 +11,7 @@
   font-family: 'DM Sans', sans-serif;
 }
 
+/* --- Sidebar --- */
 .ma-sidebar {
   background: var(--ma-surface);
   border-right: 1px solid var(--ma-border);
@@ -68,6 +74,7 @@
   margin-top: auto;
 }
 
+/* --- Page title + application list --- */
 .ma-main {
   padding: 28px 32px 48px;
   max-width: 880px;
@@ -85,12 +92,24 @@
   font: 400 15px/1.5 'DM Sans', sans-serif;
 }
 
+/* --- Rows (or empty state) --- */
 .ma-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+.ma-empty {
+  margin: 0;
+  padding: 24px;
+  background: var(--ma-surface);
+  border: 1px dashed var(--ma-border);
+  border-radius: 14px;
+  color: var(--ma-body);
+  font: 400 15px/1.55 'DM Sans', sans-serif;
+}
+
+/* --- Single application row --- */
 .ma-row {
   display: flex;
   justify-content: space-between;
@@ -159,6 +178,7 @@
   font: 400 14px/1 'DM Sans', sans-serif;
 }
 
+/* --- Breakpoints --- */
 @media (max-width: 900px) {
   .ma-page {
     grid-template-columns: 1fr;

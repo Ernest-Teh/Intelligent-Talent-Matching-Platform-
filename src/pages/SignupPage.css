@@ -1,3 +1,8 @@
+/*
+ * SignupPage.css → SignupPage.jsx (candidate vs employer role pick)
+ * Prefix: signup- / role-
+ */
+
 .signup-page {
   min-height: 100vh;
   background: var(--signup-bg);
@@ -9,6 +14,7 @@
   margin: 0 auto;
 }
 
+/* --- Top bar + brand --- */
 .signup-nav {
   background: var(--signup-surface);
   border-bottom: 1px solid var(--signup-border);
@@ -41,10 +47,12 @@
   font: 700 20px/1 var(--signup-heading-font);
 }
 
+/* --- Main column --- */
 .signup-main {
   padding: 48px 0 72px;
 }
 
+/* --- Title block --- */
 .signup-heading {
   text-align: center;
   margin-bottom: 36px;
@@ -62,6 +70,7 @@
   font: 400 16px/1.5 var(--signup-body-font);
 }
 
+/* --- Role cards --- */
 .role-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -119,6 +128,7 @@
   cursor: pointer;
 }
 
+/* --- Already have account --- */
 .signup-login-line {
   margin: 28px 0 0;
   text-align: center;
@@ -142,6 +152,7 @@
   font: 400 14px/1.4 var(--signup-body-font);
 }
 
+/* --- Breakpoints --- */
 @media (max-width: 768px) {
   .role-grid {
     grid-template-columns: 1fr;

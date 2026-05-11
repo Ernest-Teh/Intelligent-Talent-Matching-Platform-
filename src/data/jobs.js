@@ -1,3 +1,4 @@
+// Dummy listings shared by dashboard + job search + job details fallback.
 export const SAMPLE_JOBS = [
   {
     id: 'job-1',

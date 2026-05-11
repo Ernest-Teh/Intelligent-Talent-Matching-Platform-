@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { SAMPLE_JOBS } from '../data/jobs'
+import { getAllJobs } from '../data/allJobs'
+import { useJobsRevision } from '../hooks/useJobsRevision'
 import './CandidateJobSearchPage.css'
 
 const JOB_SEARCH_CONFIG = {
@@ -15,9 +16,7 @@ const JOB_SEARCH_CONFIG = {
   subtitle: 'Filter and search roles that fit your skills.',
   filters: {
     typeLabel: 'Job type',
-    types: ['All', 'Full-time', 'Contract', 'Part-time'],
     locationLabel: 'Location',
-    locations: ['All', 'Remote', 'Sydney, AU', 'Melbourne, AU'],
   },
   searchPlaceholder: 'Search by title, company, or skill…',
   searchButton: 'Search',
@@ -26,10 +25,29 @@ const JOB_SEARCH_CONFIG = {
 
 function CandidateJobSearchPage() {
   const navigate = useNavigate()
+  const jobsRev = useJobsRevision()
   const [query, setQuery] = useState('')
   const [jobType, setJobType] = useState('All')
   const [locationFilter, setLocationFilter] = useState('All')
   const [feedback, setFeedback] = useState('')
+
+  const allJobs = useMemo(() => getAllJobs(), [jobsRev])
+
+  const typeOptions = useMemo(() => {
+    const s = new Set(['Full-time', 'Part-time', 'Contract'])
+    allJobs.forEach((j) => {
+      if (j.type) s.add(j.type)
+    })
+    return ['All', ...Array.from(s).sort((a, b) => a.localeCompare(b))]
+  }, [allJobs])
+
+  const locationOptions = useMemo(() => {
+    const s = new Set()
+    allJobs.forEach((j) => {
+      if (j.location) s.add(j.location)
+    })
+    return ['All', ...Array.from(s).sort((a, b) => a.localeCompare(b))]
+  }, [allJobs])
 
   const themeVars = useMemo(
     () => ({
@@ -45,7 +63,7 @@ function CandidateJobSearchPage() {
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return SAMPLE_JOBS.filter((job) => {
+    return allJobs.filter((job) => {
       const matchesQuery =
         !q ||
         job.title.toLowerCase().includes(q) ||
@@ -55,7 +73,7 @@ function CandidateJobSearchPage() {
       const matchesLoc = locationFilter === 'All' || job.location === locationFilter
       return matchesQuery && matchesType && matchesLoc
     })
-  }, [query, jobType, locationFilter])
+  }, [allJobs, query, jobType, locationFilter])
 
   const goNav = (item) => {
     if (item.id === 'logout') {
@@ -106,7 +124,7 @@ function CandidateJobSearchPage() {
           <label className="js-filter">
             <span>{JOB_SEARCH_CONFIG.filters.typeLabel}</span>
             <select value={jobType} onChange={(e) => setJobType(e.target.value)}>
-              {JOB_SEARCH_CONFIG.filters.types.map((t) => (
+              {typeOptions.map((t) => (
                 <option key={t} value={t}>
                   {t}
                 </option>
@@ -116,7 +134,7 @@ function CandidateJobSearchPage() {
           <label className="js-filter">
             <span>{JOB_SEARCH_CONFIG.filters.locationLabel}</span>
             <select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)}>
-              {JOB_SEARCH_CONFIG.filters.locations.map((t) => (
+              {locationOptions.map((t) => (
                 <option key={t} value={t}>
                   {t}
                 </option>

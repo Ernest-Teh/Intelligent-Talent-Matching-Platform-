@@ -1,14 +1,21 @@
+/*
+ * EmployerSignupPage.css → EmployerSignupPage.jsx
+ * Prefix: employer-signup-
+ */
+
 .employer-signup-page {
   min-height: 100vh;
   background: var(--employer-signup-bg);
   font-family: 'DM Sans', sans-serif;
 }
 
+/* --- Centered content width --- */
 .employer-signup-wrap {
   width: min(1152px, calc(100% - 48px));
   margin: 0 auto;
 }
 
+/* --- Top bar --- */
 .employer-signup-header {
   background: var(--employer-signup-surface);
   border-bottom: 1px solid var(--employer-signup-border);
@@ -41,6 +48,7 @@
   font: 700 20px/28px Manrope, sans-serif;
 }
 
+/* --- Form card --- */
 .employer-signup-main {
   padding: 48px 0;
 }
@@ -67,6 +75,7 @@
   font: 400 16px/24px 'DM Sans', sans-serif;
 }
 
+/* --- Field rows (two columns) --- */
 .employer-signup-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -106,6 +115,7 @@
   resize: vertical;
 }
 
+/* --- Hiring mode radios --- */
 .employer-signup-radio-group {
   display: flex;
   gap: 20px;
@@ -128,6 +138,7 @@
   accent-color: var(--employer-signup-primary);
 }
 
+/* --- Continue / draft + feedback --- */
 .employer-signup-actions {
   margin-top: 8px;
   display: flex;
@@ -161,6 +172,7 @@
   font: 400 14px/20px 'DM Sans', sans-serif;
 }
 
+/* --- Breakpoints --- */
 @media (max-width: 720px) {
   .employer-signup-grid {
     grid-template-columns: 1fr;

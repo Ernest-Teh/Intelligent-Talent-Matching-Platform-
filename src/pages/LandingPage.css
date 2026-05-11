@@ -1,3 +1,11 @@
+/*
+ * LandingPage.css → LandingPage.jsx (home / marketing)
+ * Theme vars (--page-bg, etc.) are set inline on the root div in the component.
+ *
+ * Sections: page shell · top nav · hero · how it works · footer · breakpoints
+ */
+
+/* --- Page shell --- */
 .talentmatch-page {
   background: var(--page-bg);
   color: var(--text-body);
@@ -10,6 +18,7 @@
   margin: 0 auto;
 }
 
+/* --- Top nav --- */
 .top-nav {
   border-bottom: 1px solid var(--border-color);
   background: var(--page-bg);
@@ -77,6 +86,7 @@
   color: var(--primary-color);
 }
 
+/* --- Hero --- */
 .hero-section {
   background: var(--hero-gradient);
   padding: 72px 0 88px;
@@ -154,6 +164,7 @@
   color: var(--text-heading);
 }
 
+/* --- How it works --- */
 .how-section {
   padding: 72px 0 96px;
   background: var(--section-alt-bg);
@@ -216,6 +227,7 @@
   font-weight: 700;
 }
 
+/* --- Footer --- */
 .page-footer {
   border-top: 1px solid var(--border-color);
   padding: 24px 0 40px;
@@ -236,6 +248,7 @@
   color: var(--primary-color);
 }
 
+/* --- Breakpoints --- */
 @media (max-width: 900px) {
   .hero-grid {
     grid-template-columns: 1fr;

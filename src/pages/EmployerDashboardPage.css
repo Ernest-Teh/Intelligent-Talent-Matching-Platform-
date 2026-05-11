@@ -1,3 +1,8 @@
+/*
+ * EmployerDashboardPage.css → EmployerDashboardPage.jsx
+ * Prefix: employer- / stat- / candidate- / emp- vars on root
+ */
+
 .employer-page {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -6,6 +11,7 @@
   font-family: 'DM Sans', sans-serif;
 }
 
+/* --- Sidebar --- */
 .employer-sidebar {
   background: var(--emp-white);
   border-right: 1px solid var(--emp-border);
@@ -76,11 +82,13 @@
   margin-top: auto;
 }
 
+/* --- Main column --- */
 .employer-main {
   padding: 28px 36px 48px;
   max-width: 1100px;
 }
 
+/* --- Title row + membership box --- */
 .employer-header {
   display: flex;
   justify-content: space-between;
@@ -142,6 +150,7 @@
   opacity: 0.75;
 }
 
+/* --- Stat cards --- */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -199,6 +208,7 @@
   color: var(--emp-heading);
 }
 
+/* --- Recommended candidates list --- */
 .candidates-section h3 {
   margin: 0 0 16px;
   font: 700 18px/1.3 Manrope, sans-serif;
@@ -275,12 +285,86 @@
   color: var(--emp-heading);
 }
 
+.dash-cand-match-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dash-cand-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.dash-shortlist {
+  border: 1px solid var(--emp-border) !important;
+  background: #fff !important;
+}
+
+.dash-shortlist.is-on {
+  border-color: var(--emp-primary) !important;
+  color: var(--emp-primary) !important;
+  background: rgba(37, 99, 235, 0.08) !important;
+}
+
+.dash-view-profile {
+  border: 0 !important;
+  background: var(--emp-primary) !important;
+  color: #fff !important;
+}
+
+.emp-profile-modal-root {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.emp-profile-modal {
+  width: min(420px, 100%);
+  background: var(--emp-white);
+  border: 1px solid var(--emp-border);
+  border-radius: 16px;
+  padding: 22px 24px;
+  text-align: left;
+}
+
+.emp-profile-modal h2 {
+  margin: 0 0 10px;
+  font: 700 18px/1.2 Manrope, sans-serif;
+  color: var(--emp-heading);
+}
+
+.emp-profile-name {
+  margin: 0 0 6px;
+  font: 700 16px/1.3 Manrope, sans-serif;
+  color: var(--emp-heading);
+}
+
+.emp-profile-line {
+  margin: 0 0 4px;
+  font: 400 14px/1.5 'DM Sans', sans-serif;
+  color: var(--emp-body);
+}
+
+.emp-profile-body {
+  margin: 12px 0 16px;
+  font: 400 14px/1.55 'DM Sans', sans-serif;
+  color: var(--emp-heading);
+}
+
+/* --- Status line under main --- */
 .employer-feedback {
   margin-top: 18px;
   color: var(--emp-primary);
   font: 400 14px/1.4 'DM Sans', sans-serif;
 }
 
+/* --- Breakpoints --- */
 @media (max-width: 960px) {
   .employer-page {
     grid-template-columns: 1fr;

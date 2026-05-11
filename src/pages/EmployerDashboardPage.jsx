@@ -1,5 +1,10 @@
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { EMPLOYER_SEARCH_CANDIDATES } from '../data/employerSearchCandidates'
+import {
+  getEmployerCandidateShortlistIds,
+  toggleEmployerCandidateShortlist,
+} from '../lib/talentmatchStorage'
 import './EmployerDashboardPage.css'
 
 const EMPLOYER_CONFIG = {
@@ -24,37 +29,32 @@ const EMPLOYER_CONFIG = {
     { id: 'shortlisted', label: 'Shortlisted Candidates', value: '12', icon: 'S' },
   ],
   topTitle: 'Top 10 Recommended Candidates',
-  candidates: [
-    {
-      name: 'Sarah Johnson',
-      education: "Bachelor's in Computer Science",
-      experience: '4 years of experience',
-      skills: ['React', 'TypeScript', 'Node.js'],
-      match: 95,
-    },
-    {
-      name: 'Michael Chen',
-      education: "Master's in Software Engineering",
-      experience: '5 years of experience',
-      skills: ['Python', 'Django', 'PostgreSQL'],
-      match: 92,
-    },
-    {
-      name: 'Emily Rodriguez',
-      education: "Bachelor's in Information Technology",
-      experience: '3 years of experience',
-      skills: ['JavaScript', 'Vue.js', 'MongoDB'],
-      match: 88,
-    },
-  ],
+  shortlistLabel: 'Shortlist',
+  shortlistedLabel: 'Shortlisted',
   viewProfileLabel: 'View Profile',
 }
 
 function EmployerDashboardPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [activeSidebar, setActiveSidebar] = useState('dashboard')
   const [isMember, setIsMember] = useState(false)
   const [feedback, setFeedback] = useState('Employer dashboard ready')
+  const [shortlistIds, setShortlistIds] = useState(getEmployerCandidateShortlistIds)
+  const [profileCandidate, setProfileCandidate] = useState(null)
+
+  const dashboardCandidates = useMemo(() => EMPLOYER_SEARCH_CANDIDATES.slice(0, 3), [])
+
+  useEffect(() => {
+    const note = location.state?.employerNotice
+    if (typeof note === 'string' && note) {
+      setFeedback(note)
+    }
+  }, [location.state?.employerNotice])
+
+  useEffect(() => {
+    setShortlistIds(getEmployerCandidateShortlistIds())
+  }, [location.pathname])
 
   const themeVars = useMemo(
     () => ({
@@ -79,6 +79,19 @@ function EmployerDashboardPage() {
   const onSidebarClick = (itemId, label) => {
     if (itemId === 'logout') {
       navigate('/')
+      return
+    }
+    if (itemId === 'dashboard') {
+      setActiveSidebar('dashboard')
+      navigate('/employer/dashboard')
+      return
+    }
+    if (itemId === 'create-job') {
+      navigate('/employer/create-job')
+      return
+    }
+    if (itemId === 'find-candidates') {
+      navigate('/employer/find-candidates')
       return
     }
     setActiveSidebar(itemId)
@@ -166,31 +179,48 @@ function EmployerDashboardPage() {
         <section className="candidates-section">
           <h3>{EMPLOYER_CONFIG.topTitle}</h3>
           <div className="candidate-list">
-            {EMPLOYER_CONFIG.candidates.map((candidate) => (
-              <article key={candidate.name} className="candidate-card">
-                <div>
-                  <h4>{candidate.name}</h4>
-                  <p>{candidate.education}</p>
-                  <p>{candidate.experience}</p>
-                  <div className="skill-list">
-                    {candidate.skills.map((skill) => (
-                      <span key={skill} className="skill-chip">
-                        {skill}
-                      </span>
-                    ))}
+            {dashboardCandidates.map((candidate) => {
+              const shortlisted = shortlistIds.includes(candidate.id)
+              return (
+                <article key={candidate.id} className="candidate-card">
+                  <div>
+                    <h4>{candidate.name}</h4>
+                    <p>{candidate.education}</p>
+                    <p>{candidate.experienceLabel}</p>
+                    <div className="skill-list">
+                      {candidate.skills.map((skill) => (
+                        <span key={skill} className="skill-chip">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-                <div className="candidate-actions">
-                  <span className="match-pill">{candidate.match}%</span>
-                  <button
-                    type="button"
-                    onClick={() => setFeedback(`Viewing ${candidate.name}'s profile`)}
-                  >
-                    {EMPLOYER_CONFIG.viewProfileLabel}
-                  </button>
-                </div>
-              </article>
-            ))}
+                  <div className="candidate-actions">
+                    <div className="dash-cand-match-row">
+                      <span className="match-pill">{candidate.match}%</span>
+                    </div>
+                    <div className="dash-cand-btns">
+                      <button
+                        type="button"
+                        className={`dash-shortlist ${shortlisted ? 'is-on' : ''}`}
+                        onClick={() => {
+                          const { next, added } = toggleEmployerCandidateShortlist(candidate.id)
+                          setShortlistIds(next)
+                          setFeedback(
+                            added ? `Shortlisted ${candidate.name}` : `Removed ${candidate.name} from shortlist`,
+                          )
+                        }}
+                      >
+                        {shortlisted ? EMPLOYER_CONFIG.shortlistedLabel : EMPLOYER_CONFIG.shortlistLabel}
+                      </button>
+                      <button type="button" className="dash-view-profile" onClick={() => setProfileCandidate(candidate)}>
+                        {EMPLOYER_CONFIG.viewProfileLabel}
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              )
+            })}
           </div>
         </section>
 
@@ -198,6 +228,27 @@ function EmployerDashboardPage() {
           {feedback}
         </p>
       </main>
+
+      {profileCandidate ? (
+        <div
+          className="emp-profile-modal-root"
+          role="presentation"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setProfileCandidate(null)
+          }}
+        >
+          <div className="emp-profile-modal" role="dialog" aria-modal="true">
+            <h2>Candidate profile</h2>
+            <p className="emp-profile-name">{profileCandidate.name}</p>
+            <p className="emp-profile-line">{profileCandidate.headline}</p>
+            <p className="emp-profile-line">{profileCandidate.email}</p>
+            <p className="emp-profile-body">{profileCandidate.summary}</p>
+            <button type="button" className="dash-view-profile" onClick={() => setProfileCandidate(null)}>
+              Close
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
